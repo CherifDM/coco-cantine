@@ -1,0 +1,42 @@
+# La Coco Cantine - Projet Next.js + Sanity
+
+## Contexte du projet
+Site web pour une cantine associative végétarienne du 20ème arrondissement de Paris.
+Le site est destiné à un public large :
+- Jeunes engagés (18-35 ans) qui cherchent des infos sur les menus et événements
+- Personnes âgées ou peu familières avec le numérique → interface claire, textes lisibles, navigation intuitive
+- Bénévoles potentiels qui veulent rejoindre l'aventure
+- Habitants du quartier de la Place des fêtes
+
+## Public cible et design
+- **Design** : Simple, chaleureux, familial, accueillant
+- **Typographie** : Polices lisibles, taille de texte généreuse (min 16px)
+- **Couleurs** : Vert, orange, tons chaleureux (réf : cuisine associative)
+- **Accessibilité** : 
+  - Contrastes suffisants
+  - Navigation au clavier possible
+  - Images avec textes alternatifs
+  - Balises sémantiques HTML (header, main, nav, article, section, footer)
+- **Mobile-first** : Le site doit être parfaitement utilisable sur smartphone
+- **Performance** : Temps de chargement rapide (images optimisées, lazy loading)
+
+## Stack technique
+- **Framework** : Next.js 15 (App Router exclusivement)
+- **Langage** : TypeScript (strict mode)
+- **CSS** : Tailwind CSS (avec une palette personnalisée)
+- **CMS** : Sanity (headless)
+- **Requêtes** : GROQ
+- **Images** : next/image + Sanity Image URL
+- **Hébergement** : Vercel
+- **Versioning** : Git
+
+## Palette de couleurs (à adapter)
+```css
+/* Couleurs principales */
+primary: '#2D7D46'      /* Vert forêt - naturel */
+secondary: '#E87A2A'    /* Orange chaleureux */
+accent: '#F5C34B'       /* Jaune miel */
+background: '#FDF8F0'   /* Beige crème chaleureux */
+text: '#2D2D2D'         /* Gris foncé lisible */
+text-light: '#6B6B6B'   /* Gris moyen pour sous-textes */
+white: '#FFFFFF'
