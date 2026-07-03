@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { SanityImageComponent } from '@/components/sanity/SanityImage'
+import { PortableTextRenderer } from '@/components/sanity/PortableTextRenderer'
 import { PARTNER_CATEGORY_LABELS } from '@/lib/utils'
 import type { Partner } from '@/lib/types'
 
@@ -9,21 +9,53 @@ interface PartnerCardProps {
 }
 
 export function PartnerCard({ partner }: PartnerCardProps) {
-  const content = (
+  const logo = (
+    <SanityImageComponent
+      image={partner.logo}
+      alt={partner.logo.alt || `Logo de ${partner.name}`}
+      width={160}
+      height={80}
+      className="max-h-20 w-auto object-contain"
+    />
+  )
+
+  return (
     <Card hover className="h-full flex flex-col items-center text-center p-8">
       <div className="relative h-20 w-full mb-5 flex items-center justify-center">
-        <SanityImageComponent
-          image={partner.logo}
-          alt={partner.logo.alt || `Logo de ${partner.name}`}
-          width={160}
-          height={80}
-          className="max-h-20 w-auto object-contain"
-        />
+        {partner.website ? (
+          <a
+            href={partner.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Visiter le site de ${partner.name}`}
+            className="hover:opacity-80 transition-opacity"
+          >
+            {logo}
+          </a>
+        ) : (
+          logo
+        )}
       </div>
+
       <h3 className="font-bold text-primary">{partner.name}</h3>
-      {partner.description && (
-        <p className="mt-2 text-sm text-muted line-clamp-3">{partner.description}</p>
+
+      {partner.description && partner.description.length > 0 && (
+        <div className="mt-2 text-sm text-muted text-left w-full [&_p]:text-sm [&_p]:mb-2 [&_p:last-child]:mb-0 [&_a]:text-primary [&_a]:font-semibold">
+          <PortableTextRenderer value={partner.description} />
+        </div>
       )}
+
+      {partner.website && (
+        <a
+          href={partner.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 text-sm font-semibold text-accent hover:text-primary transition-colors"
+        >
+          Visiter le site →
+        </a>
+      )}
+
       {partner.isMainPartner && (
         <span className="mt-3 rounded-full bg-gold/50 px-3 py-0.5 text-xs font-bold text-dark">
           Partenaire principal
@@ -31,22 +63,6 @@ export function PartnerCard({ partner }: PartnerCardProps) {
       )}
     </Card>
   )
-
-  if (partner.website) {
-    return (
-      <a
-        href={partner.website}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Visiter le site de ${partner.name}`}
-        className="block h-full"
-      >
-        {content}
-      </a>
-    )
-  }
-
-  return content
 }
 
 interface PartnerGridProps {

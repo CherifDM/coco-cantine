@@ -38,7 +38,8 @@ export const partner = defineType({
     defineField({
       name: 'description',
       title: 'Description',
-      type: 'text',
+      type: 'array',
+      of: [{ type: 'block' }],
       description: 'Brève description du partenariat (visible sur la page)',
     }),
     defineField({

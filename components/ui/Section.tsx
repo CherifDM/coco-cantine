@@ -10,7 +10,7 @@ export function Section({ children, className = '', id, ariaLabelledby }: Sectio
     <section
       id={id}
       aria-labelledby={ariaLabelledby}
-      className={`py-14 md:py-20 ${className}`}
+      className={`py-8 md:py-10 ${className}`}
     >
       {children}
     </section>

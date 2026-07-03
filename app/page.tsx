@@ -1,8 +1,9 @@
 import { Hero } from '@/components/home/Hero'
 import { Pillars } from '@/components/home/Pillars'
-import { HoursAndPrices } from '@/components/home/HoursAndPrices'
-import { MenuPreview } from '@/components/home/MenuPreview'
 import { GalleryPreview } from '@/components/home/GalleryPreview'
+import { HoursSection } from '@/components/home/HoursSection'
+import { MenusAndPrices } from '@/components/home/MenusAndPrices'
+import { UsefulLinks } from '@/components/home/UsefulLinks'
 import { UpcomingEvents } from '@/components/home/UpcomingEvents'
 import { CallToAction } from '@/components/home/CallToAction'
 import { fetchSanity } from '@/lib/fetch'
@@ -26,10 +27,11 @@ export default async function HomePage() {
     <>
       <Hero settings={settings} />
       <Pillars />
-      <HoursAndPrices settings={settings} />
-      <MenuPreview menu={menu} />
-      <UpcomingEvents events={events ?? undefined} />
       <GalleryPreview images={gallery ?? undefined} />
+      <HoursSection settings={settings} />
+      <MenusAndPrices menu={menu} settings={settings} />
+      <UpcomingEvents events={events ?? undefined} />
+      <UsefulLinks settings={settings} />
       <CallToAction settings={settings} />
     </>
   )

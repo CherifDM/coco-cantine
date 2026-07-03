@@ -65,11 +65,22 @@ export const siteSettings = defineType({
       options: { hotspot: true },
     }),
     defineField({
-      name: 'aboutText',
-      title: 'Texte de présentation',
+      name: 'menuPhilosophyText',
+      title: 'Texte — Menu du jour',
       type: 'array',
       of: [{ type: 'block' }],
-      description: 'Le texte d\'accueil principal du site',
+      description: 'Explication sur le menu unique quotidien (page d\'accueil)',
+      initialValue: [
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'Pour limiter les invendus, nous proposons un menu unique chaque jour. Souvent, nous avons davantage de choix (2 ou 3 maximum) pour l\'entrée et le dessert. Tous nos plats sont au moins végétariens, souvent véganes, et surtout délicieux.',
+            },
+          ],
+        },
+      ],
     }),
     defineField({
       name: 'pricesText',
@@ -77,6 +88,61 @@ export const siteSettings = defineType({
       type: 'array',
       of: [{ type: 'block' }],
       description: 'Texte expliquant les 3 tarifs (solidaire, normal, soutien)',
+      initialValue: [
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'Nous pensons que bien manger est un droit, or nous n\'avons pas toustes le même porte-monnaie ni les moyens de bien se nourrir.',
+            },
+          ],
+        },
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'Nous proposons donc 3 tarifs différents en fonction de ce que vous pouvez/voulez payer (c\'est vous qui le déterminez, sentez-vous libre) :',
+            },
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: 'pricesImage',
+      title: 'Photo des tarifs',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Texte alternatif',
+          type: 'string',
+          initialValue: 'Affiche des tarifs de La Coco Cantine',
+        }),
+      ],
+    }),
+    defineField({
+      name: 'usefulLinksIntro',
+      title: 'Introduction — Liens utiles',
+      type: 'string',
+      description: 'Phrase d\'introduction de la section liens utiles (page d\'accueil)',
+      initialValue: 'En attendant de nous rendre visite, vous pouvez :',
+    }),
+    defineField({
+      name: 'usefulLinksText',
+      title: 'Liens utiles (page d\'accueil)',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'Liste de liens utiles avec liens cliquables',
+    }),
+    defineField({
+      name: 'aboutText',
+      title: 'Texte de présentation',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'Le texte d\'accueil principal du site',
     }),
     defineField({
         name: 'partnersIntroText',

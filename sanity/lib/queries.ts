@@ -51,7 +51,11 @@ export const siteSettingsQuery = groq`
     socialLinks,
     heroImage { ${imageFields} },
     aboutText,
+    menuPhilosophyText,
     pricesText,
+    pricesImage { ${imageFields} },
+    usefulLinksIntro,
+    usefulLinksText,
     partnersIntroText
   }
 `

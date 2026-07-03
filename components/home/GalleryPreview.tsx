@@ -15,7 +15,7 @@ export function GalleryPreview({ images }: GalleryPreviewProps) {
       <Container>
         <SectionHeader
           id="gallery-title"
-          title="En images"
+          title="Galerie de photos"
           subtitle="Plats, événements et moments de convivialité à La Coco Cantine."
         />
         <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

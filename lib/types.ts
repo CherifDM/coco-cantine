@@ -59,7 +59,11 @@ export interface SiteSettings {
   }
   heroImage?: SanityImage
   aboutText?: PortableTextBlock[]
+  menuPhilosophyText?: PortableTextBlock[]
   pricesText?: PortableTextBlock[]
+  pricesImage?: SanityImage
+  usefulLinksIntro?: string
+  usefulLinksText?: PortableTextBlock[]
   partnersIntroText?: PortableTextBlock[]
 }
 
@@ -109,7 +113,7 @@ export interface Partner {
   name: string
   logo: SanityImage
   website?: string
-  description?: string
+  description?: PortableTextBlock[]
   category: 'public' | 'private' | 'association' | 'eco' | 'other'
   isMainPartner?: boolean
   order?: number
