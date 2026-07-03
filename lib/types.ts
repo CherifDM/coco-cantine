@@ -58,6 +58,7 @@ export interface SiteSettings {
     facebook?: string
   }
   heroImage?: SanityImage
+  imageLogo?: SanityImage
   aboutText?: PortableTextBlock[]
   menuPhilosophyText?: PortableTextBlock[]
   pricesText?: PortableTextBlock[]

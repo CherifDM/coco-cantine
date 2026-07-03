@@ -9,6 +9,9 @@ interface HeroProps {
 }
 
 export function Hero({ settings }: HeroProps) {
+  const siteTitle = settings?.title || 'La Coco Cantine'
+  const hasLogo = !!settings?.imageLogo?.asset
+
   return (
     <>
       <section className="relative min-h-[70vh] flex items-center" aria-labelledby="hero-title">
@@ -35,9 +38,29 @@ export function Hero({ settings }: HeroProps) {
           <p className="inline-block rounded-full bg-gold/90 text-dark text-sm font-bold px-4 py-1.5 mb-6">
             Végétarien · Bio · Local
           </p>
-          <h1 id="hero-title" className="text-4xl md:text-5xl lg:text-6xl font-bold mb-5 leading-tight">
-            La Coco Cantine
-          </h1>
+
+          {hasLogo ? (
+            <>
+              <h1 id="hero-title" className="sr-only">{siteTitle}</h1>
+              <div className="mb-5 flex justify-center px-4">
+                <SanityImageComponent
+                  image={settings.imageLogo!}
+                  alt={settings.imageLogo!.alt || siteTitle}
+                  width={640}
+                  height={240}
+                  priority
+                  objectFit="contain"
+                  className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-auto object-contain drop-shadow-lg"
+                  sizes="(max-width: 768px) 80vw, 512px"
+                />
+              </div>
+            </>
+          ) : (
+            <h1 id="hero-title" className="text-4xl md:text-5xl lg:text-6xl font-bold mb-5 leading-tight">
+              {siteTitle}
+            </h1>
+          )}
+
           <p className="text-lg md:text-xl mb-3 max-w-2xl mx-auto text-white/90">
             Restaurant associatif végétarien pour toustes à Place des fêtes
           </p>

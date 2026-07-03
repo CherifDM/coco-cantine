@@ -65,6 +65,21 @@ export const siteSettings = defineType({
       options: { hotspot: true },
     }),
     defineField({
+      name: 'imageLogo',
+      title: 'Logo avec nom (Hero)',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Logo affiché à la place du titre sur la page d\'accueil',
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Texte alternatif',
+          type: 'string',
+          initialValue: 'La Coco Cantine',
+        }),
+      ],
+    }),
+    defineField({
       name: 'menuPhilosophyText',
       title: 'Texte — Menu du jour',
       type: 'array',

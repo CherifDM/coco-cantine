@@ -50,6 +50,7 @@ export const siteSettingsQuery = groq`
     eveningHours,
     socialLinks,
     heroImage { ${imageFields} },
+    imageLogo { ${imageFields} },
     aboutText,
     menuPhilosophyText,
     pricesText,
@@ -102,9 +103,12 @@ export const upcomingEventsQuery = groq`
     date,
     endDate,
     description,
+    content,
     image { ${imageFields} },
     price,
     location,
+    organizer,
+    schedule[]{ time, activity, description },
     featured
   }
 `
