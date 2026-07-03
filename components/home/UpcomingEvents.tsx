@@ -62,7 +62,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
         </div>
         <div className="text-center mt-8">
           <Link
-            href="/blog?category=events"
+            href="/blog?filter=events"
             className="text-primary font-semibold hover:text-secondary transition-colors"
           >
             Voir tous les événements →

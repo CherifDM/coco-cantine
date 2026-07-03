@@ -7,7 +7,7 @@ import { SanityImageComponent } from '@/components/sanity/SanityImage'
 import { PortableTextRenderer } from '@/components/sanity/PortableTextRenderer'
 import { fetchSanity } from '@/lib/fetch'
 import { postBySlugQuery, postSlugsQuery } from '@/sanity/lib/queries'
-import { formatDate, POST_CATEGORY_LABELS } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
 import type { Post } from '@/lib/types'
 
 interface PostPageProps {
@@ -41,13 +41,8 @@ export default async function PostPage({ params }: PostPageProps) {
 
   if (!post) notFound()
 
-  const categoryLabel = post.category
-    ? POST_CATEGORY_LABELS[post.category]
-    : null
-
   return (
     <article>
-      {/* En-tête de l'article */}
       <header className="bg-white py-12">
         <Container className="max-w-3xl">
           <Link
@@ -58,7 +53,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </Link>
 
           <div className="flex flex-wrap items-center gap-3 mb-4">
-            {categoryLabel && <Badge variant="category">{categoryLabel}</Badge>}
+            <Badge variant="category">Article</Badge>
             <time dateTime={post.publishedAt} className="text-text-light text-sm">
               {formatDate(post.publishedAt)}
             </time>
@@ -77,7 +72,6 @@ export default async function PostPage({ params }: PostPageProps) {
         </Container>
       </header>
 
-      {/* Image de couverture */}
       {post.featuredImage?.asset && (
         <div className="relative aspect-video max-w-4xl mx-auto px-4 mb-8">
           <SanityImageComponent
@@ -91,7 +85,6 @@ export default async function PostPage({ params }: PostPageProps) {
         </div>
       )}
 
-      {/* Contenu */}
       <Container className="max-w-3xl pb-16">
         <PortableTextRenderer value={post.content} />
       </Container>

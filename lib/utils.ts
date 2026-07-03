@@ -28,6 +28,21 @@ export function formatDateTime(dateString: string): string {
   }
 }
 
+/** Formate une date de menu : "Lundi 29 Juin" */
+export function formatMenuDayLabel(dateString: string): string {
+  try {
+    const [year, month, day] = dateString.split('-').map(Number)
+    const date = new Date(year, month - 1, day)
+    const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+    const dayName = capitalize(format(date, 'EEEE', { locale: fr }))
+    const dayNum = format(date, 'd', { locale: fr })
+    const monthName = capitalize(format(date, 'MMMM', { locale: fr }))
+    return `${dayName} ${dayNum} ${monthName}`
+  } catch {
+    return dateString
+  }
+}
+
 /** Libellé du jour de la semaine en français */
 export const DAY_LABELS: Record<string, string> = {
   monday: 'Lundi',
@@ -35,14 +50,31 @@ export const DAY_LABELS: Record<string, string> = {
   wednesday: 'Mercredi',
   thursday: 'Jeudi',
   friday: 'Vendredi',
+  saturday: 'Samedi',
+  sunday: 'Dimanche',
 }
 
-/** Libellés des catégories de blog */
-export const POST_CATEGORY_LABELS: Record<string, string> = {
-  menus: 'Menus de la semaine',
+/** Libellés des filtres de la page blog */
+export const BLOG_FILTER_LABELS: Record<string, string> = {
+  all: 'Tous',
+  articles: 'Articles',
   events: 'Événements',
-  article: 'Actualités',
-  info: 'Actualités',
+  menus: 'Menus',
+}
+
+/** Emojis par type d'événement */
+export const EVENT_TYPE_EMOJIS: Record<string, string> = {
+  concert: '🎵',
+  karaoke: '🎤',
+  bal: '💃',
+  atelier: '🎨',
+  apero: '🍷',
+  other: '🎪',
+}
+
+/** Libellé d'une semaine de menus : "Semaine du 29 juin 2026" */
+export function formatWeekLabel(weekStart: string): string {
+  return `Semaine du ${formatDate(weekStart)}`
 }
 
 /** Libellés des catégories de partenaires */

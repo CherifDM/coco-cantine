@@ -2,40 +2,53 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { Container } from '@/components/ui/Container'
 import { Section, SectionHeader } from '@/components/ui/Section'
-import { PostCard } from '@/components/blog/PostCard'
-import { CategoryFilter } from '@/components/blog/CategoryFilter'
+import { BlogFeed } from '@/components/blog/BlogFeed'
+import { BlogFilter } from '@/components/blog/BlogFilter'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { Button } from '@/components/ui/Button'
 import { fetchSanity } from '@/lib/fetch'
-import { postsQuery, postsCountQuery } from '@/sanity/lib/queries'
-import type { Post, PostCategory } from '@/lib/types'
+import { buildFilteredBlogItems, paginateBlogItems } from '@/lib/blog'
+import {
+  postsQuery,
+  blogEventsQuery,
+  allMenusOfTheDayQuery,
+} from '@/sanity/lib/queries'
+import type { BlogFilter as BlogFilterType, Event, MenuOfTheDay, Post } from '@/lib/types'
 
 export const metadata: Metadata = {
   title: 'Sur le feu',
   description: 'Actualités, menus de la semaine et événements de La Coco Cantine.',
 }
 
-const POSTS_PER_PAGE = 9
+const ITEMS_PER_PAGE = 9
 
 interface BlogPageProps {
-  searchParams: Promise<{ category?: string; page?: string }>
+  searchParams: Promise<{ filter?: string; page?: string }>
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams
-  const category = (params.category as PostCategory) || 'all'
+  const filter = (['all', 'articles', 'events', 'menus'].includes(params.filter ?? '')
+    ? params.filter
+    : 'all') as BlogFilterType
   const page = Math.max(1, parseInt(params.page || '1', 10))
-  const start = (page - 1) * POSTS_PER_PAGE
-  const end = start + POSTS_PER_PAGE
+  const start = (page - 1) * ITEMS_PER_PAGE
+  const end = start + ITEMS_PER_PAGE
 
-  const queryCategory = category === 'all' ? 'all' : category
-
-  const [posts, total] = await Promise.all([
-    fetchSanity<Post[]>(postsQuery, { category: queryCategory, start, end }),
-    fetchSanity<number>(postsCountQuery, { category: queryCategory }),
+  const [posts, events, menus] = await Promise.all([
+    fetchSanity<Post[]>(postsQuery),
+    fetchSanity<Event[]>(blogEventsQuery),
+    fetchSanity<MenuOfTheDay[]>(allMenusOfTheDayQuery),
   ])
 
-  const totalPages = Math.ceil((total ?? 0) / POSTS_PER_PAGE)
+  const allItems = buildFilteredBlogItems(
+    filter,
+    posts ?? [],
+    events ?? [],
+    menus ?? [],
+  )
+  const { items, total } = paginateBlogItems(allItems, filter, start, end)
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE)
 
   return (
     <Section ariaLabelledby="blog-title">
@@ -47,26 +60,22 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         />
 
         <Suspense fallback={<LoadingSpinner label="Chargement des filtres…" />}>
-          <CategoryFilter />
+          <BlogFilter />
         </Suspense>
 
-        {posts && posts.length > 0 ? (
+        {items.length > 0 ? (
           <>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post) => (
-                <PostCard key={post._id} post={post} />
-              ))}
-            </div>
+            <BlogFeed items={items} />
 
             {totalPages > 1 && (
               <nav
                 className="flex justify-center gap-4 mt-10"
-                aria-label="Pagination des articles"
+                aria-label="Pagination"
               >
                 {page > 1 && (
                   <Button
                     href={`/blog?${new URLSearchParams({
-                      ...(category !== 'all' ? { category } : {}),
+                      ...(filter !== 'all' ? { filter } : {}),
                       page: String(page - 1),
                     }).toString()}`}
                     variant="outline"
@@ -80,7 +89,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 {page < totalPages && (
                   <Button
                     href={`/blog?${new URLSearchParams({
-                      ...(category !== 'all' ? { category } : {}),
+                      ...(filter !== 'all' ? { filter } : {}),
                       page: String(page + 1),
                     }).toString()}`}
                     variant="outline"
@@ -93,7 +102,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </>
         ) : (
           <p className="text-center text-text-light py-12">
-            Aucun article pour le moment. Revenez bientôt !
+            Aucun contenu pour le moment. Revenez bientôt !
           </p>
         )}
       </Container>

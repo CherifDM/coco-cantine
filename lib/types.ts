@@ -8,23 +8,38 @@ export interface SanityImage {
   caption?: string
 }
 
-/** Plat de menu (entrée, plat ou dessert) */
-export interface MenuItem {
+/** Plat (document dish déréférencé) */
+export interface Dish {
+  _id: string
   name: string
+  description?: string
   isVegan?: boolean
   isGlutenFree?: boolean
-  description?: string
+  seasonal?: boolean
+  image?: SanityImage
+}
+
+/** Groupe de plats servis ensemble (une option au choix) */
+export interface MenuCourseGroup {
+  _key?: string
+  dishes: Dish[]
 }
 
 /** Menu du jour */
 export interface MenuOfTheDay {
   _id: string
   date: string
-  dayOfWeek: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday'
   specialNote?: string
-  starters?: MenuItem[]
-  mainCourses: MenuItem[]
-  desserts?: MenuItem[]
+  isClosed?: boolean
+  starters?: MenuCourseGroup[]
+  mainCourses?: MenuCourseGroup[]
+  desserts?: MenuCourseGroup[]
+}
+
+/** Semaine de menus (regroupés côté frontend) */
+export interface MenuWeek {
+  weekStart: string
+  dailyMenus: MenuOfTheDay[]
 }
 
 /** Paramètres globaux du site */
@@ -58,10 +73,10 @@ export interface Post {
   featuredImage?: SanityImage
   publishedAt: string
   author?: string
-  category?: 'article' | 'menus' | 'events' | 'info'
+  tags?: string[]
 }
 
-/** Événement à venir */
+/** Événement */
 export interface Event {
   _id: string
   title: string
@@ -69,9 +84,12 @@ export interface Event {
   date: string
   endDate?: string
   description: string
+  content?: PortableTextBlock[]
   image?: SanityImage
   price?: string
   location?: string
+  organizer?: string
+  schedule?: { time?: string; activity?: string; description?: string }[]
   featured?: boolean
 }
 
@@ -137,5 +155,11 @@ export interface VolunteerPage {
   seoDescription?: string
 }
 
-/** Catégories de blog pour le filtre */
-export type PostCategory = 'all' | 'menus' | 'events' | 'article'
+/** Filtre de la page blog */
+export type BlogFilter = 'all' | 'articles' | 'events' | 'menus'
+
+/** Élément unifié affiché sur la page blog */
+export type BlogItem =
+  | { kind: 'post'; date: string; data: Post }
+  | { kind: 'event'; date: string; data: Event }
+  | { kind: 'menuWeek'; date: string; data: MenuWeek }

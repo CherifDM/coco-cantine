@@ -32,119 +32,7 @@ export const post = defineType({
       name: 'content',
       title: 'Contenu',
       type: 'array',
-      of: [
-        { type: 'block' },
-        {
-          type: 'image',
-          options: {
-            hotspot: true,
-          },
-          fields: [
-            defineField({
-              name: 'alt',
-              title: 'Texte alternatif',
-              type: 'string',
-            }),
-            defineField({
-              name: 'caption',
-              title: 'Légende',
-              type: 'string',
-            }),
-          ],
-        },
-        // Permet d'inclure le menu de la semaine dans un article
-        {
-          type: 'object',
-          name: 'weeklyMenu',
-          title: 'Menu de la semaine',
-          fields: [
-            defineField({
-              name: 'description',
-              title: 'Description introductive',
-              type: 'text',
-              description: 'Texte avant les menus (ex: "Pour tendre vers une cuisine accessible...")',
-            }),
-            defineField({
-              name: 'days',
-              title: 'Jours de la semaine',
-              type: 'array',
-              of: [
-                {
-                  type: 'object',
-                  fields: [
-                    defineField({
-                      name: 'day',
-                      title: 'Jour',
-                      type: 'string',
-                      options: {
-                        list: [
-                          { title: 'Lundi', value: 'monday' },
-                          { title: 'Mardi', value: 'tuesday' },
-                          { title: 'Mercredi', value: 'wednesday' },
-                          { title: 'Jeudi', value: 'thursday' },
-                          { title: 'Vendredi', value: 'friday' },
-                        ],
-                      },
-                    }),
-                    defineField({
-                      name: 'specialNote',
-                      title: 'Note spéciale',
-                      type: 'text',
-                      description: 'Ex: "Mardi nous proposons au moins un menu sans aucun produit d\'origine animale"',
-                    }),
-                    defineField({
-                      name: 'starters',
-                      title: 'Entrées',
-                      type: 'array',
-                      of: [
-                        {
-                          type: 'object',
-                          fields: [
-                            defineField({ name: 'name', title: 'Nom', type: 'string' }),
-                            defineField({ name: 'isVegan', title: 'Végan (V)', type: 'boolean' }),
-                            defineField({ name: 'isGlutenFree', title: 'Sans gluten (SG)', type: 'boolean' }),
-                          ],
-                        },
-                      ],
-                    }),
-                    defineField({
-                      name: 'mainCourses',
-                      title: 'Plats',
-                      type: 'array',
-                      of: [
-                        {
-                          type: 'object',
-                          fields: [
-                            defineField({ name: 'name', title: 'Nom', type: 'string' }),
-                            defineField({ name: 'isVegan', title: 'Végan (V)', type: 'boolean' }),
-                            defineField({ name: 'isGlutenFree', title: 'Sans gluten (SG)', type: 'boolean' }),
-                          ],
-                        },
-                      ],
-                    }),
-                    defineField({
-                      name: 'desserts',
-                      title: 'Desserts',
-                      type: 'array',
-                      of: [
-                        {
-                          type: 'object',
-                          fields: [
-                            defineField({ name: 'name', title: 'Nom', type: 'string' }),
-                            defineField({ name: 'isVegan', title: 'Végan (V)', type: 'boolean' }),
-                            defineField({ name: 'isGlutenFree', title: 'Sans gluten (SG)', type: 'boolean' }),
-                          ],
-                        },
-                      ],
-                    }),
-                  ],
-                },
-              ],
-            }),
-          ],
-        },
-      ],
-      validation: (Rule) => Rule.required(),
+      of: [{ type: 'block' }, { type: 'image' }],
     }),
     defineField({
       name: 'featuredImage',
@@ -182,20 +70,6 @@ export const post = defineType({
       },
     }),
     defineField({
-      name: 'category',
-      title: 'Catégorie',
-      type: 'string',
-      options: {
-        list: [
-          { title: '📝 Article', value: 'article' },
-          { title: '🍽️ Menus de la semaine', value: 'menus' },
-          { title: '📅 Événements', value: 'events' },
-          { title: '📢 Info', value: 'info' },
-        ],
-      },
-      initialValue: 'article',
-    }),
-    defineField({
       name: 'isDraft',
       title: 'Brouillon',
       type: 'boolean',
@@ -216,20 +90,12 @@ export const post = defineType({
       date: 'publishedAt',
       media: 'featuredImage',
       isDraft: 'isDraft',
-      category: 'category',
     },
-    prepare({ title, date, media, isDraft, category }) {
+    prepare({ title, date, media, isDraft }) {
       const formattedDate = date ? new Date(date).toLocaleDateString('fr-FR') : ''
-      const categoryEmojis = {
-        article: '📝',
-        menus: '🍽️',
-        events: '📅',
-        info: '📢',
-      }
-      const emoji = categoryEmojis[category as keyof typeof categoryEmojis] || ''
       return {
         title: isDraft ? `[BROUILLON] ${title}` : title,
-        subtitle: `${emoji} ${formattedDate}`,
+        subtitle: formattedDate,
         media,
       }
     },

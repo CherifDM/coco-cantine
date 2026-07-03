@@ -20,32 +20,6 @@ export const dish = defineType({
       validation: (Rule) => Rule.max(300),
     }),
     defineField({
-      name: 'price',
-      title: 'Prix (en €)',
-      type: 'number',
-      validation: (Rule) => Rule.required().min(0).precision(2),
-    }),
-    defineField({
-      name: 'category',
-      title: 'Catégorie',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Entrée', value: 'starter' },
-          { title: 'Plat', value: 'main' },
-          { title: 'Dessert', value: 'dessert' },
-          { title: 'Boisson', value: 'drink' },
-        ],
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'isVegetarian',
-      title: 'Végétarien',
-      type: 'boolean',
-      initialValue: true,
-    }),
-    defineField({
       name: 'isVegan',
       title: 'Végan',
       type: 'boolean',
@@ -74,13 +48,6 @@ export const dish = defineType({
       ],
     }),
     defineField({
-      name: 'isDailySpecial',
-      title: 'Plat du jour',
-      type: 'boolean',
-      description: 'Cocher si ce plat est proposé comme plat du jour',
-      initialValue: false,
-    }),
-    defineField({
       name: 'seasonal',
       title: 'Plat de saison',
       type: 'boolean',
@@ -94,22 +61,23 @@ export const dish = defineType({
       name: 'nameAsc',
       by: [{ field: 'name', direction: 'asc' }],
     },
-    {
-      title: 'Prix, croissant',
-      name: 'priceAsc',
-      by: [{ field: 'price', direction: 'asc' }],
-    },
   ],
   preview: {
     select: {
       title: 'name',
-      subtitle: 'price',
+      isVegan: 'isVegan',
+      isGlutenFree: 'isGlutenFree',
+      seasonal: 'seasonal',
       media: 'image',
     },
-    prepare({ title, subtitle, media }) {
+    prepare({ title, isVegan, isGlutenFree, seasonal, media }) {
+      const tags = []
+      if (isVegan) tags.push('🌱 V')
+      if (isGlutenFree) tags.push('🚫 SG')
+      if (seasonal) tags.push('🍂 Saison')
       return {
         title: title || 'Sans nom',
-        subtitle: subtitle ? `${subtitle}€` : 'Prix non défini',
+        subtitle: tags.join(' ') || undefined,
         media,
       }
     },

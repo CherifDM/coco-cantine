@@ -40,3 +40,21 @@ background: '#FDF8F0'   /* Beige crème chaleureux */
 text: '#2D2D2D'         /* Gris foncé lisible */
 text-light: '#6B6B6B'   /* Gris moyen pour sous-textes */
 white: '#FFFFFF'
+
+## ⚠️ RÈGLES IMPORTANTES - EXÉCUTION DE COMMANDES ⚠️
+
+**NE JAMAIS EXÉCUTER DE COMMANDES AUTOMATIQUEMENT**
+
+Je gère manuellement toutes les commandes suivantes :
+- `npm run dev` ou `npm start`
+- `npm run build` ou `next build`
+- `npm run lint` ou `next lint`
+- `npm run typegen` (génération des types Sanity)
+- `npm install` ou `npm ci`
+- `git` commands (add, commit, push, etc.)
+- `sanity` commands (deploy, etc.)
+- Toute autre commande shell ou terminal
+
+**RÈGLE :** Tu ne dois PAS proposer d'exécuter des commandes. Tu te contentes de GÉNÉRER LE CODE. Je testerai et exécuterai les commandes moi-même manuellement.
+
+Si tu penses qu'une commande est nécessaire, mentionne-la dans un commentaire dans le code ou dans ta réponse, mais ne l'exécute pas.

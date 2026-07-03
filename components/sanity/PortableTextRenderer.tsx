@@ -70,55 +70,6 @@ const components: PortableTextComponents = {
         </figure>
       )
     },
-    weeklyMenu: ({ value }) => {
-      const menu = value as {
-        description?: string
-        days?: {
-          day?: string
-          specialNote?: string
-          starters?: { name: string; isVegan?: boolean; isGlutenFree?: boolean }[]
-          mainCourses?: { name: string; isVegan?: boolean; isGlutenFree?: boolean }[]
-          desserts?: { name: string; isVegan?: boolean; isGlutenFree?: boolean }[]
-        }[]
-      }
-      const dayLabels: Record<string, string> = {
-        monday: 'Lundi', tuesday: 'Mardi', wednesday: 'Mercredi',
-        thursday: 'Jeudi', friday: 'Vendredi',
-      }
-      return (
-        <div className="my-8 rounded-2xl bg-white p-6 shadow-md">
-          {menu.description && <p className="mb-4 text-text-light">{menu.description}</p>}
-          {menu.days?.map((day, i) => (
-            <div key={i} className="mb-6 last:mb-0">
-              <h4 className="font-bold text-primary text-lg mb-2">
-                {dayLabels[day.day || ''] || day.day}
-              </h4>
-              {day.specialNote && (
-                <p className="text-sm text-secondary mb-2 italic">{day.specialNote}</p>
-              )}
-              {day.starters && day.starters.length > 0 && (
-                <div className="mb-2">
-                  <span className="font-semibold text-sm">Entrées : </span>
-                  {day.starters.map((s) => s.name).join(', ')}
-                </div>
-              )}
-              {day.mainCourses && day.mainCourses.length > 0 && (
-                <div className="mb-2">
-                  <span className="font-semibold text-sm">Plats : </span>
-                  {day.mainCourses.map((m) => m.name).join(', ')}
-                </div>
-              )}
-              {day.desserts && day.desserts.length > 0 && (
-                <div>
-                  <span className="font-semibold text-sm">Desserts : </span>
-                  {day.desserts.map((d) => d.name).join(', ')}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )
-    },
   },
 }
 

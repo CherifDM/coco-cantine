@@ -2,7 +2,7 @@ import { Container } from '@/components/ui/Container'
 import { Section, SectionHeader } from '@/components/ui/Section'
 import { Button } from '@/components/ui/Button'
 import { MenuDay } from '@/components/menu/MenuDay'
-import { DAY_LABELS } from '@/lib/utils'
+import { formatMenuDayLabel } from '@/lib/utils'
 import type { MenuOfTheDay } from '@/lib/types'
 
 interface MenuPreviewProps {
@@ -23,11 +23,12 @@ export function MenuPreview({ menu }: MenuPreviewProps) {
         {menu ? (
           <div className="max-w-2xl mx-auto">
             <MenuDay
-              dayLabel={`${DAY_LABELS[menu.dayOfWeek] || ''} — ${new Date(menu.date).toLocaleDateString('fr-FR')}`}
+              dayLabel={formatMenuDayLabel(menu.date)}
               starters={menu.starters}
               mainCourses={menu.mainCourses}
               desserts={menu.desserts}
               specialNote={menu.specialNote}
+              isClosed={menu.isClosed}
             />
           </div>
         ) : (
@@ -37,7 +38,7 @@ export function MenuPreview({ menu }: MenuPreviewProps) {
         )}
 
         <div className="text-center mt-8">
-          <Button href="/blog?category=menus" variant="outline">
+          <Button href="/blog?filter=menus" variant="outline">
             Voir les menus de la semaine
           </Button>
         </div>

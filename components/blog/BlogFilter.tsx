@@ -1,36 +1,35 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { POST_CATEGORY_LABELS } from '@/lib/utils'
-import type { PostCategory } from '@/lib/types'
+import type { BlogFilter } from '@/lib/types'
 
-const CATEGORIES: { value: PostCategory; label: string }[] = [
+const FILTERS: { value: BlogFilter; label: string }[] = [
   { value: 'all', label: 'Tous' },
-  { value: 'menus', label: 'Menus de la semaine' },
+  { value: 'articles', label: 'Articles' },
   { value: 'events', label: 'Événements' },
-  { value: 'article', label: 'Actualités' },
+  { value: 'menus', label: 'Menus' },
 ]
 
-/** Filtre par catégorie pour la page blog */
-export function CategoryFilter() {
+/** Filtre par type de contenu pour la page blog */
+export function BlogFilter() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const current = (searchParams.get('category') as PostCategory) || 'all'
+  const current = (searchParams.get('filter') as BlogFilter) || 'all'
 
-  function handleChange(category: PostCategory) {
+  function handleChange(filter: BlogFilter) {
     const params = new URLSearchParams(searchParams.toString())
-    if (category === 'all') {
-      params.delete('category')
+    if (filter === 'all') {
+      params.delete('filter')
     } else {
-      params.set('category', category)
+      params.set('filter', filter)
     }
     params.delete('page')
     router.push(`/blog?${params.toString()}`)
   }
 
   return (
-    <div className="flex flex-wrap gap-2 justify-center mb-8" role="group" aria-label="Filtrer par catégorie">
-      {CATEGORIES.map(({ value, label }) => (
+    <div className="flex flex-wrap gap-2 justify-center mb-8" role="group" aria-label="Filtrer le contenu">
+      {FILTERS.map(({ value, label }) => (
         <button
           key={value}
           type="button"
@@ -48,5 +47,3 @@ export function CategoryFilter() {
     </div>
   )
 }
-
-export { POST_CATEGORY_LABELS }

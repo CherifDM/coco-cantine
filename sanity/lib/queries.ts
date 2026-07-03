@@ -11,7 +11,34 @@ const imageFields = groq`
   caption
 `
 
-/** Paramètres globaux du site (singleton) */
+/** Champs d'un plat (document dish déréférencé) */
+const dishFields = groq`
+  _id,
+  name,
+  description,
+  isVegan,
+  isGlutenFree,
+  seasonal,
+  image { ${imageFields} }
+`
+
+/** Groupes de plats avec références dish résolues */
+const menuCourseGroupsFields = groq`
+  _key,
+  "dishes": dishes[]->{ ${dishFields} }
+`
+
+/** Champs complets d'un menu du jour */
+export const menuOfTheDayFields = groq`
+  _id,
+  date,
+  specialNote,
+  isClosed,
+  starters[]{ ${menuCourseGroupsFields} },
+  mainCourses[]{ ${menuCourseGroupsFields} },
+  desserts[]{ ${menuCourseGroupsFields} }
+`
+
 export const siteSettingsQuery = groq`
   *[_type == "siteSettings"][0]{
     title,
@@ -29,16 +56,24 @@ export const siteSettingsQuery = groq`
   }
 `
 
-/** Menu du jour le plus récent (aujourd'hui ou le dernier publié) */
+/** Menu du jour le plus récent */
 export const menuOfTheDayQuery = groq`
   *[_type == "menuOfTheDay"] | order(date desc)[0]{
-    _id,
-    date,
-    dayOfWeek,
-    specialNote,
-    starters[]{ name, isVegan, isGlutenFree, description },
-    mainCourses[]{ name, isVegan, isGlutenFree, description },
-    desserts[]{ name, isVegan, isGlutenFree, description }
+    ${menuOfTheDayFields}
+  }
+`
+
+/** Tous les menus du jour (pour regroupement par semaine) */
+export const allMenusOfTheDayQuery = groq`
+  *[_type == "menuOfTheDay"] | order(date desc){
+    ${menuOfTheDayFields}
+  }
+`
+
+/** Menus du jour d'une semaine donnée */
+export const menusForWeekQuery = groq`
+  *[_type == "menuOfTheDay" && date >= $weekStart && date <= $weekEnd] | order(date asc){
+    ${menuOfTheDayFields}
   }
 `
 
@@ -70,32 +105,33 @@ export const upcomingEventsQuery = groq`
   }
 `
 
-/** Liste paginée des articles de blog */
+/** Tous les articles publiés */
 export const postsQuery = groq`
-  *[_type == "post" && isDraft != true && (
-    $category == "all" ||
-    category == $category ||
-    ($category == "article" && category == "info")
-  )]
-  | order(publishedAt desc)[$start...$end]{
+  *[_type == "post" && isDraft != true] | order(publishedAt desc){
     _id,
     title,
     "slug": slug.current,
     excerpt,
     featuredImage { ${imageFields} },
     publishedAt,
-    author,
-    category
+    author
   }
 `
 
-/** Nombre total d'articles (pour la pagination) */
-export const postsCountQuery = groq`
-  count(*[_type == "post" && isDraft != true && (
-    $category == "all" ||
-    category == $category ||
-    ($category == "article" && category == "info")
-  )])
+/** Tous les événements publiés */
+export const blogEventsQuery = groq`
+  *[_type == "event" && isPublished == true] | order(date desc){
+    _id,
+    title,
+    type,
+    date,
+    endDate,
+    description,
+    image { ${imageFields} },
+    price,
+    location,
+    featured
+  }
 `
 
 /** Article individuel par slug */
@@ -109,8 +145,25 @@ export const postBySlugQuery = groq`
     featuredImage { ${imageFields} },
     publishedAt,
     author,
-    category,
     tags
+  }
+`
+
+/** Événement individuel par ID */
+export const eventByIdQuery = groq`
+  *[_type == "event" && _id == $id && isPublished == true][0]{
+    _id,
+    title,
+    type,
+    date,
+    endDate,
+    description,
+    content,
+    image { ${imageFields} },
+    price,
+    location,
+    organizer,
+    schedule[]{ time, activity, description }
   }
 `
 
@@ -119,6 +172,11 @@ export const postSlugsQuery = groq`
   *[_type == "post" && isDraft != true && defined(slug.current)]{
     "slug": slug.current
   }
+`
+
+/** IDs de tous les événements publiés */
+export const eventIdsQuery = groq`
+  *[_type == "event" && isPublished == true]{ _id }
 `
 
 /** Tous les partenaires triés */

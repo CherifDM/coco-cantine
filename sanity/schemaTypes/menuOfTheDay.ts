@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { menuCourseGroupsField } from './menuFields'
 
 export const menuOfTheDay = defineType({
   name: 'menuOfTheDay',
@@ -12,19 +13,11 @@ export const menuOfTheDay = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'dayOfWeek',
-      title: 'Jour de la semaine',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Lundi', value: 'monday' },
-          { title: 'Mardi', value: 'tuesday' },
-          { title: 'Mercredi', value: 'wednesday' },
-          { title: 'Jeudi', value: 'thursday' },
-          { title: 'Vendredi', value: 'friday' },
-        ],
-      },
-      validation: (Rule) => Rule.required(),
+      name: 'isClosed',
+      title: 'Cantine fermée',
+      type: 'boolean',
+      description: 'Cocher si la cantine est fermée ce jour-là',
+      initialValue: false,
     }),
     defineField({
       name: 'specialNote',
@@ -32,156 +25,13 @@ export const menuOfTheDay = defineType({
       type: 'text',
       description: 'Ex: "Mardi nous proposons au moins un menu sans aucun produit d\'origine animale"',
     }),
-    defineField({
-      name: 'starters',
-      title: 'Entrées',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'name',
-              title: 'Nom',
-              type: 'string',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'isVegan',
-              title: 'Végan (V)',
-              type: 'boolean',
-              initialValue: false,
-            }),
-            defineField({
-              name: 'isGlutenFree',
-              title: 'Sans gluten (SG)',
-              type: 'boolean',
-              initialValue: false,
-            }),
-            defineField({
-              name: 'description',
-              title: 'Description (optionnelle)',
-              type: 'text',
-            }),
-          ],
-          preview: {
-            select: {
-              title: 'name',
-              subtitle: 'isVegan',
-            },
-            prepare({ title, subtitle }) {
-              const tags = []
-              if (subtitle) tags.push('🌱 V')
-              return {
-                title: title || 'Sans nom',
-                subtitle: tags.join(' '),
-              }
-            },
-          },
-        },
-      ],
-      validation: (Rule) => Rule.max(3),
+    menuCourseGroupsField('starters', 'Entrées', { maxGroups: 5 }),
+    menuCourseGroupsField('mainCourses', 'Plats', {
+      required: true,
+      minGroups: 1,
+      maxGroups: 5,
     }),
-    defineField({
-      name: 'mainCourses',
-      title: 'Plats',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'name',
-              title: 'Nom',
-              type: 'string',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'isVegan',
-              title: 'Végan (V)',
-              type: 'boolean',
-              initialValue: false,
-            }),
-            defineField({
-              name: 'isGlutenFree',
-              title: 'Sans gluten (SG)',
-              type: 'boolean',
-              initialValue: false,
-            }),
-            defineField({
-              name: 'description',
-              title: 'Description (optionnelle)',
-              type: 'text',
-            }),
-          ],
-          preview: {
-            select: {
-              title: 'name',
-              subtitle: 'isVegan',
-            },
-            prepare({ title, subtitle }) {
-              const tags = []
-              if (subtitle) tags.push('🌱 V')
-              return {
-                title: title || 'Sans nom',
-                subtitle: tags.join(' '),
-              }
-            },
-          },
-        },
-      ],
-      validation: (Rule) => Rule.required().min(1).max(3),
-    }),
-    defineField({
-      name: 'desserts',
-      title: 'Desserts',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'name',
-              title: 'Nom',
-              type: 'string',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'isVegan',
-              title: 'Végan (V)',
-              type: 'boolean',
-              initialValue: false,
-            }),
-            defineField({
-              name: 'isGlutenFree',
-              title: 'Sans gluten (SG)',
-              type: 'boolean',
-              initialValue: false,
-            }),
-            defineField({
-              name: 'description',
-              title: 'Description (optionnelle)',
-              type: 'text',
-            }),
-          ],
-          preview: {
-            select: {
-              title: 'name',
-              subtitle: 'isVegan',
-            },
-            prepare({ title, subtitle }) {
-              const tags = []
-              if (subtitle) tags.push('🌱 V')
-              return {
-                title: title || 'Sans nom',
-                subtitle: tags.join(' '),
-              }
-            },
-          },
-        },
-      ],
-      validation: (Rule) => Rule.max(3),
-    }),
+    menuCourseGroupsField('desserts', 'Desserts', { maxGroups: 5 }),
   ],
   orderings: [
     {
@@ -193,23 +43,18 @@ export const menuOfTheDay = defineType({
   preview: {
     select: {
       date: 'date',
-      dayOfWeek: 'dayOfWeek',
-      mainCourses: 'mainCourses',
+      isClosed: 'isClosed',
+      groupCount: 'mainCourses.length',
+      firstDish: 'mainCourses.0.dishes.0->name',
     },
-    prepare({ date, dayOfWeek, mainCourses }) {
+    prepare({ date, isClosed, groupCount, firstDish }) {
       const formattedDate = date ? new Date(date).toLocaleDateString('fr-FR') : 'Date inconnue'
-      const daysMap = {
-        monday: 'Lundi',
-        tuesday: 'Mardi',
-        wednesday: 'Mercredi',
-        thursday: 'Jeudi',
-        friday: 'Vendredi',
+      if (isClosed) {
+        return { title: formattedDate, subtitle: 'Fermé' }
       }
-      const dayLabel = daysMap[dayOfWeek as keyof typeof daysMap] || ''
-      const count = mainCourses?.length || 0
       return {
-        title: `${dayLabel} ${formattedDate}`,
-        subtitle: `${count} plat${count > 1 ? 's' : ''}`,
+        title: formattedDate,
+        subtitle: `${groupCount || 0} option(s) de plat${firstDish ? ` — ${firstDish}` : ''}`,
       }
     },
   },

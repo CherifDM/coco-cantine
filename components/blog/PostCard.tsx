@@ -2,19 +2,15 @@ import Link from 'next/link'
 import { Card, CardContent, CardImage } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { SanityImageComponent } from '@/components/sanity/SanityImage'
-import { formatDate, POST_CATEGORY_LABELS } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
 import type { Post } from '@/lib/types'
 
 interface PostCardProps {
   post: Post
 }
 
-/** Carte d'article de blog pour la liste */
+/** Carte d'article pour la liste blog */
 export function PostCard({ post }: PostCardProps) {
-  const categoryLabel = post.category
-    ? POST_CATEGORY_LABELS[post.category] || post.category
-    : null
-
   return (
     <Card as="article" className="h-full flex flex-col hover:shadow-lg transition-shadow">
       <Link href={`/blog/${post.slug}`} className="flex flex-col h-full">
@@ -28,13 +24,13 @@ export function PostCard({ post }: PostCardProps) {
             />
           ) : (
             <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-              <span className="text-4xl" aria-hidden="true">🍽️</span>
+              <span className="text-4xl" aria-hidden="true">📝</span>
             </div>
           )}
         </CardImage>
         <CardContent className="flex flex-col flex-1">
           <div className="flex items-center gap-2 mb-2">
-            {categoryLabel && <Badge variant="category">{categoryLabel}</Badge>}
+            <Badge variant="category">Article</Badge>
             <time dateTime={post.publishedAt} className="text-sm text-text-light">
               {formatDate(post.publishedAt)}
             </time>
