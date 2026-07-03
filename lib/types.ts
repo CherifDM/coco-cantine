@@ -1,9 +1,9 @@
 import type { PortableTextBlock } from '@portabletext/react'
-import type { SanityImageSource } from '@sanity/image-url'
+import type { SanityImageAsset } from '@sanity/image-url'
 
 /** Image Sanity avec métadonnées optionnelles */
 export interface SanityImage {
-  asset?: SanityImageSource
+  asset?: SanityImageAsset
   alt?: string
   caption?: string
 }
