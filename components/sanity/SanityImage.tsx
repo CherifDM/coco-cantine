@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { urlFor } from '@/sanity/lib/image'
+//import { urlFor } from '@/sanity/lib/image'
 import type { SanityImage } from '@/lib/types'
 
 interface SanityImageProps {
@@ -70,46 +70,46 @@ export function SanityImageComponent({
     )
   }
 
-  if (image.asset?._ref || image.asset?._id) {
-    try {
-      const src = urlFor(image).width(width).height(height).auto('format').url()
+  // if (image.asset?._ref || image.asset?._id) {
+  //   try {
+  //     const src = urlFor(image).width(width).height(height).auto('format').url()
 
-      if (fill) {
-        return (
-          <Image
-            src={src}
-            alt={alt || 'Image'}
-            fill
-            className={`${fitClass} ${className}`}
-            sizes={sizes}
-            priority={priority}
-          />
-        )
-      }
+  //     if (fill) {
+  //       return (
+  //         <Image
+  //           src={src}
+  //           alt={alt || 'Image'}
+  //           fill
+  //           className={`${fitClass} ${className}`}
+  //           sizes={sizes}
+  //           priority={priority}
+  //         />
+  //       )
+  //     }
 
-      return (
-        <Image
-          src={src}
-          alt={alt || 'Image'}
-          width={width}
-          height={height}
-          className={className}
-          sizes={sizes}
-          priority={priority}
-        />
-      )
-    } catch {
-      return (
-        <div
-          className={`bg-primary/10 flex items-center justify-center ${className}`}
-          role="img"
-          aria-label={alt}
-        >
-          <span className="text-muted text-sm">Erreur de chargement</span>
-        </div>
-      )
-    }
-  }
+  //     return (
+  //       <Image
+  //         src={src}
+  //         alt={alt || 'Image'}
+  //         width={width}
+  //         height={height}
+  //         className={className}
+  //         sizes={sizes}
+  //         priority={priority}
+  //       />
+  //     )
+  //   } catch {
+  //     return (
+  //       <div
+  //         className={`bg-primary/10 flex items-center justify-center ${className}`}
+  //         role="img"
+  //         aria-label={alt}
+  //       >
+  //         <span className="text-muted text-sm">Erreur de chargement</span>
+  //       </div>
+  //     )
+  //   }
+  // }
 
   return (
     <div
