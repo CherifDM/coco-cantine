@@ -5,24 +5,22 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { NAV_LINKS } from '@/lib/utils'
 
-/** Navigation principale avec menu mobile */
 export function Header() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-light shadow-sm">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/" className="flex flex-col gap-0.5 group">
-          <span className="text-xl font-bold text-primary group-hover:text-secondary transition-colors">
+          <span className="text-xl font-bold text-primary group-hover:text-accent transition-colors">
             La Coco Cantine
           </span>
-          <span className="text-xs text-text-light hidden sm:block">
+          <span className="text-xs text-muted hidden sm:block">
             Pour que tout le monde puisse bien manger !
           </span>
         </Link>
 
-        {/* Navigation desktop */}
         <nav className="hidden lg:flex items-center gap-1" aria-label="Navigation principale">
           {NAV_LINKS.map(({ href, label }) => {
             const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
@@ -30,10 +28,10 @@ export function Header() {
               <Link
                 key={href}
                 href={href}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                   isActive
                     ? 'bg-primary text-white'
-                    : 'text-foreground hover:bg-primary/10 hover:text-primary'
+                    : 'text-dark hover:bg-light hover:text-primary'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
@@ -43,10 +41,9 @@ export function Header() {
           })}
         </nav>
 
-        {/* Bouton menu mobile */}
         <button
           type="button"
-          className="lg:hidden rounded-lg p-2 text-foreground hover:bg-primary/10"
+          className="lg:hidden rounded-full p-2.5 text-dark hover:bg-light"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
@@ -62,11 +59,10 @@ export function Header() {
         </button>
       </div>
 
-      {/* Menu mobile */}
       {menuOpen && (
         <nav
           id="mobile-menu"
-          className="lg:hidden border-t border-primary/10 bg-white px-4 py-4"
+          className="lg:hidden border-t border-light bg-white px-4 py-4"
           aria-label="Navigation mobile"
         >
           <ul className="flex flex-col gap-1">
@@ -76,10 +72,10 @@ export function Header() {
                 <li key={href}>
                   <Link
                     href={href}
-                    className={`block rounded-lg px-4 py-3 text-base font-medium transition-colors ${
+                    className={`block rounded-xl px-4 py-3 text-base font-semibold transition-colors ${
                       isActive
                         ? 'bg-primary text-white'
-                        : 'text-foreground hover:bg-primary/10'
+                        : 'text-dark hover:bg-light'
                     }`}
                     aria-current={isActive ? 'page' : undefined}
                     onClick={() => setMenuOpen(false)}

@@ -3,12 +3,26 @@ interface CardProps {
   className?: string
   as?: 'article' | 'div' | 'section' | 'blockquote'
   id?: string
+  variant?: 'white' | 'light'
+  hover?: boolean
 }
 
-/** Carte avec ombre légère et coins arrondis */
-export function Card({ children, className = '', as: Tag = 'div', id }: CardProps) {
+export function Card({
+  children,
+  className = '',
+  as: Tag = 'div',
+  id,
+  variant = 'white',
+  hover = false,
+}: CardProps) {
+  const bg = variant === 'light' ? 'bg-light' : 'bg-white'
+  const hoverClass = hover ? 'card-hover' : ''
+
   return (
-    <Tag id={id} className={`rounded-2xl bg-white shadow-md overflow-hidden ${className}`}>
+    <Tag
+      id={id}
+      className={`rounded-2xl ${bg} shadow-md overflow-hidden ${hoverClass} ${className}`}
+    >
       {children}
     </Tag>
   )
@@ -20,7 +34,7 @@ interface CardContentProps {
 }
 
 export function CardContent({ children, className = '' }: CardContentProps) {
-  return <div className={`p-6 ${className}`}>{children}</div>
+  return <div className={`p-6 md:p-8 ${className}`}>{children}</div>
 }
 
 interface CardImageProps {
@@ -29,5 +43,9 @@ interface CardImageProps {
 }
 
 export function CardImage({ children, className = '' }: CardImageProps) {
-  return <div className={`relative aspect-video overflow-hidden ${className}`}>{children}</div>
+  return (
+    <div className={`relative aspect-video md:aspect-auto md:min-h-[200px] overflow-hidden shrink-0 ${className}`}>
+      {children}
+    </div>
+  )
 }

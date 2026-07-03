@@ -1,42 +1,87 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Nagbuloe';
+  src:
+    url("/fonts/Nagbuloe Regular.otf") format("opentype"),
+    url("/fonts/Nagbuloe Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nagbuloe';
+  src:
+    url("/fonts/Nagbuloe Bold.otf") format("opentype"),
+    url("/fonts/Nagbuloe Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --background: #FDF8F0;
-  --foreground: #2D2D2D;
-  --primary: #2D7D46;
-  --secondary: #E87A2A;
-  --accent: #F5C34B;
-  --text-light: #6B6B6B;
+  --primary: #357A94;
+  --secondary: #55944B;
+  --accent: #51B7B7;
+  --highlight: #B6DA6C;
+  --gold: #D3E14B;
+  --light: #D5E6DC;
+  --dark: #232224;
+  --background: #F7FAF8;
+  --foreground: #232224;
+  --muted: #4A5A52;
+  --white: #FFFFFF;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
-  --color-text-light: var(--text-light);
-  --color-white: #FFFFFF;
-  --font-sans: var(--font-nunito);
+  --color-highlight: var(--highlight);
+  --color-gold: var(--gold);
+  --color-light: var(--light);
+  --color-dark: var(--dark);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-white: var(--white);
+  --font-sans: var(--font-display);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-nunito), system-ui, sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
+  font-family: 'Nagbuloe', var(--font-display), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 
-/* Focus visible pour l'accessibilité clavier */
+a, button {
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease,
+    transform 0.25s ease, box-shadow 0.25s ease;
+}
+
 :focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
-/* Styles pour le contenu Portable Text */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(53, 122, 148, 0.12);
+}
+
 .prose-coco h2 {
-  font-size: 1.5rem;
+  font-size: 1.625rem;
   font-weight: 700;
   color: var(--primary);
   margin-top: 2rem;
@@ -45,8 +90,8 @@ body {
 
 .prose-coco h3 {
   font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--foreground);
+  font-weight: 700;
+  color: var(--secondary);
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -62,14 +107,20 @@ body {
 }
 
 .prose-coco li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .prose-coco a {
   color: var(--primary);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .prose-coco a:hover {
-  color: var(--secondary);
+  color: var(--accent);
+}
+
+.pattern-dots {
+  background-image: radial-gradient(var(--highlight) 1px, transparent 1px);
+  background-size: 24px 24px;
 }

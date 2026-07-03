@@ -9,10 +9,9 @@ interface MenuPreviewProps {
   menu?: MenuOfTheDay | null
 }
 
-/** Aperçu du menu du jour */
 export function MenuPreview({ menu }: MenuPreviewProps) {
   return (
-    <Section className="bg-white" ariaLabelledby="menu-title">
+    <Section className="bg-light" ariaLabelledby="menu-title">
       <Container>
         <SectionHeader
           id="menu-title"
@@ -32,13 +31,13 @@ export function MenuPreview({ menu }: MenuPreviewProps) {
             />
           </div>
         ) : (
-          <p className="text-center text-text-light">
+          <p className="text-center text-muted text-lg">
             Le menu du jour sera bientôt disponible. Revenez nous voir !
           </p>
         )}
 
-        <div className="text-center mt-8">
-          <Button href="/blog?filter=menus" variant="outline">
+        <div className="text-center mt-10">
+          <Button href="/blog?filter=menus" variant="accent">
             Voir les menus de la semaine
           </Button>
         </div>

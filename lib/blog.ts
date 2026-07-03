@@ -1,4 +1,5 @@
 import { groupMenusByWeek } from '@/lib/groupMenusByWeek'
+import { formatWeekLabel } from '@/lib/utils'
 import type { BlogItem, BlogFilter, Event, MenuWeek, Post } from '@/lib/types'
 import type { MenuOfTheDay } from '@/lib/types'
 
@@ -85,4 +86,16 @@ export function getMenuWeekSummary(week: MenuWeek): string {
     return `${total} jour${total > 1 ? 's' : ''} de menu`
   }
   return `${openDays} jour${openDays > 1 ? 's' : ''} ouvert${openDays > 1 ? 's' : ''} sur ${total}`
+}
+
+export function getBlogItemHref(item: BlogItem): string {
+  if (item.kind === 'post') return `/blog/${item.data.slug}`
+  if (item.kind === 'event') return `/blog/evenements/${item.data._id}`
+  return `/blog/menus/${item.data.weekStart}`
+}
+
+export function getBlogItemTitle(item: BlogItem): string {
+  if (item.kind === 'post') return item.data.title
+  if (item.kind === 'event') return item.data.title
+  return formatWeekLabel(item.data.weekStart)
 }

@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Container } from '@/components/ui/Container'
-import { Badge } from '@/components/ui/Badge'
-import { WeeklyMenuView } from '@/components/menu/WeeklyMenuView'
+import { Breadcrumb } from '@/components/layout/Breadcrumb'
+import { BlogMenuWeekDetail } from '@/components/blog/BlogMenuWeekDetail'
 import { fetchSanity } from '@/lib/fetch'
 import { getWeekEndKey } from '@/lib/groupMenusByWeek'
 import { menusForWeekQuery, allMenusOfTheDayQuery } from '@/sanity/lib/queries'
@@ -53,28 +53,31 @@ export default async function MenuWeekPage({ params }: MenuWeekPageProps) {
   if (!dailyMenus || dailyMenus.length === 0) notFound()
 
   const week: MenuWeek = { weekStart, dailyMenus }
+  const weekLabel = formatWeekLabel(weekStart)
 
   return (
     <article>
-      <header className="bg-white py-12">
+      <header className="bg-light py-12 md:py-16">
         <Container className="max-w-3xl">
-          <Link
-            href="/blog?filter=menus"
-            className="text-primary text-sm font-medium hover:text-secondary mb-6 inline-block"
-          >
-            ← Retour aux menus
-          </Link>
-
-          <Badge variant="category" className="mb-4">Menus de la semaine</Badge>
-
-          <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight">
-            {formatWeekLabel(weekStart)}
-          </h1>
+          <Breadcrumb
+            items={[
+              { label: 'Sur le feu', href: '/blog' },
+              { label: weekLabel },
+            ]}
+          />
         </Container>
       </header>
 
-      <Container className="max-w-3xl pb-16">
-        <WeeklyMenuView week={week} />
+      <Container className="max-w-3xl pb-16 pt-8">
+        <BlogMenuWeekDetail week={week} />
+        <div className="mt-12 pt-8 border-t border-light">
+          <Link
+            href="/blog?filter=menus"
+            className="text-primary font-bold hover:text-accent transition-colors"
+          >
+            ← Retour aux menus
+          </Link>
+        </div>
       </Container>
     </article>
   )

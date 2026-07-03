@@ -2,12 +2,10 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Container } from '@/components/ui/Container'
-import { Badge } from '@/components/ui/Badge'
-import { SanityImageComponent } from '@/components/sanity/SanityImage'
-import { PortableTextRenderer } from '@/components/sanity/PortableTextRenderer'
+import { Breadcrumb } from '@/components/layout/Breadcrumb'
+import { BlogPostDetail } from '@/components/blog/BlogPostDetail'
 import { fetchSanity } from '@/lib/fetch'
 import { postBySlugQuery, postSlugsQuery } from '@/sanity/lib/queries'
-import { formatDate } from '@/lib/utils'
 import type { Post } from '@/lib/types'
 
 interface PostPageProps {
@@ -43,50 +41,27 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <article>
-      <header className="bg-white py-12">
+      <header className="bg-light py-12 md:py-16">
         <Container className="max-w-3xl">
-          <Link
-            href="/blog"
-            className="text-primary text-sm font-medium hover:text-secondary mb-6 inline-block"
-          >
-            ← Retour au blog
-          </Link>
-
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <Badge variant="category">Article</Badge>
-            <time dateTime={post.publishedAt} className="text-text-light text-sm">
-              {formatDate(post.publishedAt)}
-            </time>
-            {post.author && (
-              <span className="text-text-light text-sm">par {post.author}</span>
-            )}
-          </div>
-
-          <h1 className="text-3xl md:text-4xl font-bold text-primary leading-tight">
-            {post.title}
-          </h1>
-
-          {post.excerpt && (
-            <p className="mt-4 text-lg text-text-light">{post.excerpt}</p>
-          )}
+          <Breadcrumb
+            items={[
+              { label: 'Sur le feu', href: '/blog' },
+              { label: post.title },
+            ]}
+          />
         </Container>
       </header>
 
-      {post.featuredImage?.asset && (
-        <div className="relative aspect-video max-w-4xl mx-auto px-4 mb-8">
-          <SanityImageComponent
-            image={post.featuredImage}
-            alt={post.featuredImage.alt || post.title}
-            fill
-            priority
-            className="rounded-2xl object-cover"
-            sizes="(max-width: 1024px) 100vw, 896px"
-          />
+      <Container className="max-w-3xl pb-16 pt-8">
+        <BlogPostDetail post={post} />
+        <div className="mt-12 pt-8 border-t border-light">
+          <Link
+            href="/blog?filter=articles"
+            className="text-primary font-bold hover:text-accent transition-colors"
+          >
+            ← Retour au blog
+          </Link>
         </div>
-      )}
-
-      <Container className="max-w-3xl pb-16">
-        <PortableTextRenderer value={post.content} />
       </Container>
     </article>
   )

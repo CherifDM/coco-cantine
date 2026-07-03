@@ -1,47 +1,69 @@
-import Link from 'next/link'
-import { Card, CardContent, CardImage } from '@/components/ui/Card'
+import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { SanityImageComponent } from '@/components/sanity/SanityImage'
+import { Button } from '@/components/ui/Button'
+import { BlogCardImage } from '@/components/blog/BlogCardImage'
 import { formatDate } from '@/lib/utils'
+import { getBlogItemHref } from '@/lib/blog'
 import type { Post } from '@/lib/types'
 
 interface PostCardProps {
   post: Post
+  onOpen: () => void
 }
 
-/** Carte d'article pour la liste blog */
-export function PostCard({ post }: PostCardProps) {
+function openOnKeyboard(event: React.KeyboardEvent, onOpen: () => void) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    onOpen()
+  }
+}
+
+export function PostCard({ post, onOpen }: PostCardProps) {
+  const href = getBlogItemHref({ kind: 'post', date: post.publishedAt, data: post })
+
   return (
-    <Card as="article" className="h-full flex flex-col hover:shadow-lg transition-shadow">
-      <Link href={`/blog/${post.slug}`} className="flex flex-col h-full">
-        <CardImage>
-          {post.featuredImage?.asset ? (
-            <SanityImageComponent
-              image={post.featuredImage}
-              alt={post.featuredImage.alt || post.title}
-              fill
-              className="transition-transform hover:scale-105 duration-300"
-            />
-          ) : (
-            <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-              <span className="text-4xl" aria-hidden="true">📝</span>
-            </div>
-          )}
-        </CardImage>
-        <CardContent className="flex flex-col flex-1">
-          <div className="flex items-center gap-2 mb-2">
+    <Card as="article" hover className="overflow-hidden flex flex-col md:flex-row md:min-h-[220px]">
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={onOpen}
+        onKeyDown={(e) => openOnKeyboard(e, onOpen)}
+        className="md:w-1/2 shrink-0 cursor-pointer"
+        aria-label={`Aperçu : ${post.title}`}
+      >
+        <BlogCardImage
+          image={post.featuredImage}
+          alt={post.featuredImage?.alt || post.title}
+          fallback={<span className="text-5xl" aria-hidden="true">📝</span>}
+          fallbackClassName="bg-primary/10"
+        />
+      </div>
+
+      <CardContent className="flex flex-col flex-1 !py-5 !px-6 md:!py-6">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={onOpen}
+          onKeyDown={(e) => openOnKeyboard(e, onOpen)}
+          className="flex-1 cursor-pointer text-left"
+        >
+          <div className="flex flex-wrap items-center gap-2 mb-2">
             <Badge variant="category">Article</Badge>
-            <time dateTime={post.publishedAt} className="text-sm text-text-light">
+            <time dateTime={post.publishedAt} className="text-sm text-muted">
               {formatDate(post.publishedAt)}
             </time>
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2">{post.title}</h3>
+          <h3 className="text-xl font-bold text-primary mb-2 line-clamp-2">{post.title}</h3>
           {post.excerpt && (
-            <p className="text-text-light text-sm line-clamp-3 flex-1">{post.excerpt}</p>
+            <p className="text-muted line-clamp-3">{post.excerpt}</p>
           )}
-          <span className="mt-4 text-primary font-semibold text-sm">Lire la suite →</span>
-        </CardContent>
-      </Link>
+        </div>
+        <div className="flex justify-end mt-3 shrink-0">
+          <Button href={href} variant="ghost" size="sm" className="text-accent font-bold">
+            Lire la suite →
+          </Button>
+        </div>
+      </CardContent>
     </Card>
   )
 }

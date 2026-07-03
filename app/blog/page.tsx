@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { Container } from '@/components/ui/Container'
-import { Section, SectionHeader } from '@/components/ui/Section'
+import { Section } from '@/components/ui/Section'
+import { PageHero } from '@/components/layout/PageHero'
 import { BlogFeed } from '@/components/blog/BlogFeed'
 import { BlogFilter } from '@/components/blog/BlogFilter'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
@@ -51,61 +52,64 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE)
 
   return (
-    <Section ariaLabelledby="blog-title">
-      <Container>
-        <SectionHeader
-          id="blog-title"
-          title="Sur le feu"
-          subtitle="Menus de la semaine, événements et actualités de La Coco Cantine."
-        />
+    <>
+      <PageHero
+        title="Sur le feu"
+        subtitle="Menus de la semaine, événements et actualités de La Coco Cantine."
+        breadcrumbs={[{ label: 'Sur le feu' }]}
+        variant="primary"
+      />
 
-        <Suspense fallback={<LoadingSpinner label="Chargement des filtres…" />}>
-          <BlogFilter />
-        </Suspense>
+      <Section>
+        <Container>
+          <Suspense fallback={<LoadingSpinner label="Chargement des filtres…" />}>
+            <BlogFilter />
+          </Suspense>
 
-        {items.length > 0 ? (
-          <>
-            <BlogFeed items={items} />
+          {items.length > 0 ? (
+            <>
+              <BlogFeed items={items} />
 
-            {totalPages > 1 && (
-              <nav
-                className="flex justify-center gap-4 mt-10"
-                aria-label="Pagination"
-              >
-                {page > 1 && (
-                  <Button
-                    href={`/blog?${new URLSearchParams({
-                      ...(filter !== 'all' ? { filter } : {}),
-                      page: String(page - 1),
-                    }).toString()}`}
-                    variant="outline"
-                  >
-                    ← Précédent
-                  </Button>
-                )}
-                <span className="flex items-center text-text-light text-sm">
-                  Page {page} sur {totalPages}
-                </span>
-                {page < totalPages && (
-                  <Button
-                    href={`/blog?${new URLSearchParams({
-                      ...(filter !== 'all' ? { filter } : {}),
-                      page: String(page + 1),
-                    }).toString()}`}
-                    variant="outline"
-                  >
-                    Suivant →
-                  </Button>
-                )}
-              </nav>
-            )}
-          </>
-        ) : (
-          <p className="text-center text-text-light py-12">
-            Aucun contenu pour le moment. Revenez bientôt !
-          </p>
-        )}
-      </Container>
-    </Section>
+              {totalPages > 1 && (
+                <nav
+                  className="flex justify-center items-center gap-4 mt-12"
+                  aria-label="Pagination"
+                >
+                  {page > 1 && (
+                    <Button
+                      href={`/blog?${new URLSearchParams({
+                        ...(filter !== 'all' ? { filter } : {}),
+                        page: String(page - 1),
+                      }).toString()}`}
+                      variant="outline"
+                    >
+                      ← Précédent
+                    </Button>
+                  )}
+                  <span className="flex items-center text-muted text-sm font-medium">
+                    Page {page} sur {totalPages}
+                  </span>
+                  {page < totalPages && (
+                    <Button
+                      href={`/blog?${new URLSearchParams({
+                        ...(filter !== 'all' ? { filter } : {}),
+                        page: String(page + 1),
+                      }).toString()}`}
+                      variant="outline"
+                    >
+                      Suivant →
+                    </Button>
+                  )}
+                </nav>
+              )}
+            </>
+          ) : (
+            <p className="text-center text-muted py-12 text-lg">
+              Aucun contenu pour le moment. Revenez bientôt !
+            </p>
+          )}
+        </Container>
+      </Section>
+    </>
   )
 }

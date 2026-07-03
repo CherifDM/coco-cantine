@@ -19,7 +19,7 @@ const components: PortableTextComponents = {
     ),
     normal: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-accent pl-4 italic my-4 text-text-light">
+      <blockquote className="border-l-4 border-accent pl-4 italic my-4 text-muted bg-light/50 rounded-r-lg py-2">
         {children}
       </blockquote>
     ),
@@ -39,7 +39,7 @@ const components: PortableTextComponents = {
       return (
         <a
           href={href}
-          className="text-primary underline hover:text-secondary"
+          className="text-primary underline hover:text-accent underline-offset-2"
           {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         >
           {children}
@@ -63,7 +63,7 @@ const components: PortableTextComponents = {
             className="rounded-xl w-full h-auto"
           />
           {img.caption && (
-            <figcaption className="mt-2 text-sm text-text-light text-center">
+            <figcaption className="mt-2 text-sm text-muted text-center">
               {img.caption}
             </figcaption>
           )}

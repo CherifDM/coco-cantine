@@ -19,12 +19,11 @@ interface UpcomingEventsProps {
   events?: Event[]
 }
 
-/** Événements à venir sur la page d'accueil */
 export function UpcomingEvents({ events }: UpcomingEventsProps) {
   if (!events || events.length === 0) return null
 
   return (
-    <Section className="bg-white" ariaLabelledby="events-title">
+    <Section ariaLabelledby="events-title">
       <Container>
         <SectionHeader
           id="events-title"
@@ -33,37 +32,38 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
         />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
-            <Card as="article" key={event._id}>
+            <Card as="article" key={event._id} hover>
               <CardImage>
                 {event.image?.asset ? (
                   <SanityImageComponent
                     image={event.image}
                     alt={event.image.alt || event.title}
                     fill
+                    className="object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-accent/20 flex items-center justify-center text-5xl">
+                  <div className="w-full h-full min-h-[180px] bg-accent/20 flex items-center justify-center text-5xl">
                     {EVENT_EMOJIS[event.type] || '📅'}
                   </div>
                 )}
               </CardImage>
               <CardContent>
-                <time dateTime={event.date} className="text-sm text-secondary font-semibold">
+                <time dateTime={event.date} className="text-sm text-secondary font-bold">
                   {formatDateShort(event.date)}
                 </time>
-                <h3 className="text-lg font-bold mt-1 mb-2">{event.title}</h3>
-                <p className="text-text-light text-sm line-clamp-2">{event.description}</p>
+                <h3 className="text-lg font-bold mt-1 mb-2 text-primary">{event.title}</h3>
+                <p className="text-muted text-sm line-clamp-2">{event.description}</p>
                 {event.price && (
-                  <p className="mt-2 text-sm font-medium text-primary">{event.price}</p>
+                  <p className="mt-3 text-sm font-semibold text-accent">{event.price}</p>
                 )}
               </CardContent>
             </Card>
           ))}
         </div>
-        <div className="text-center mt-8">
+        <div className="text-center mt-10">
           <Link
             href="/blog?filter=events"
-            className="text-primary font-semibold hover:text-secondary transition-colors"
+            className="inline-flex items-center gap-2 text-primary font-bold hover:text-accent transition-colors"
           >
             Voir tous les événements →
           </Link>

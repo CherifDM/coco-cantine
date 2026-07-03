@@ -1,4 +1,4 @@
-type BadgeVariant = 'vegan' | 'glutenFree' | 'category' | 'default'
+type BadgeVariant = 'vegan' | 'glutenFree' | 'category' | 'event' | 'menu' | 'highlight' | 'default'
 
 interface BadgeProps {
   variant?: BadgeVariant
@@ -7,13 +7,15 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  vegan: 'bg-primary/15 text-primary',
-  glutenFree: 'bg-accent/30 text-foreground',
-  category: 'bg-secondary/15 text-secondary',
-  default: 'bg-foreground/10 text-foreground',
+  vegan: 'bg-secondary/15 text-secondary',
+  glutenFree: 'bg-accent/20 text-primary',
+  category: 'bg-primary/15 text-primary',
+  event: 'bg-accent/20 text-primary',
+  menu: 'bg-highlight/40 text-dark',
+  highlight: 'bg-gold/50 text-dark',
+  default: 'bg-light text-dark',
 }
 
-/** Badge pour étiquettes (V, SG, catégories…) */
 export function Badge({ variant = 'default', children, className = '' }: BadgeProps) {
   return (
     <span

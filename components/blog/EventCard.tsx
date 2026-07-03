@@ -1,52 +1,73 @@
-import Link from 'next/link'
-import { Card, CardContent, CardImage } from '@/components/ui/Card'
+import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { SanityImageComponent } from '@/components/sanity/SanityImage'
+import { Button } from '@/components/ui/Button'
+import { BlogCardImage } from '@/components/blog/BlogCardImage'
 import { formatDate, EVENT_TYPE_EMOJIS } from '@/lib/utils'
+import { getBlogItemHref } from '@/lib/blog'
 import type { Event } from '@/lib/types'
 
 interface EventCardProps {
   event: Event
+  onOpen: () => void
 }
 
-/** Carte d'événement pour la liste blog */
-export function EventCard({ event }: EventCardProps) {
+function openOnKeyboard(event: React.KeyboardEvent, onOpen: () => void) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    onOpen()
+  }
+}
+
+export function EventCard({ event, onOpen }: EventCardProps) {
   const emoji = EVENT_TYPE_EMOJIS[event.type] || '📅'
+  const href = getBlogItemHref({ kind: 'event', date: event.date, data: event })
 
   return (
-    <Card as="article" className="h-full flex flex-col hover:shadow-lg transition-shadow">
-      <Link href={`/blog/evenements/${event._id}`} className="flex flex-col h-full">
-        <CardImage>
-          {event.image?.asset ? (
-            <SanityImageComponent
-              image={event.image}
-              alt={event.image.alt || event.title}
-              fill
-              className="transition-transform hover:scale-105 duration-300"
-            />
-          ) : (
-            <div className="w-full h-full bg-accent/20 flex items-center justify-center text-5xl">
-              {emoji}
-            </div>
-          )}
-        </CardImage>
-        <CardContent className="flex flex-col flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <Badge variant="category">Événement</Badge>
-            <time dateTime={event.date} className="text-sm text-text-light">
+    <Card as="article" hover className="overflow-hidden flex flex-col md:flex-row md:min-h-[220px]">
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={onOpen}
+        onKeyDown={(e) => openOnKeyboard(e, onOpen)}
+        className="md:w-1/2 shrink-0 cursor-pointer"
+        aria-label={`Aperçu : ${event.title}`}
+      >
+        <BlogCardImage
+          image={event.image}
+          alt={event.image?.alt || event.title}
+          fallback={<span className="text-5xl" aria-hidden="true">{emoji}</span>}
+          fallbackClassName="bg-accent/20"
+        />
+      </div>
+
+      <CardContent className="flex flex-col flex-1 !py-5 !px-6 md:!py-6">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={onOpen}
+          onKeyDown={(e) => openOnKeyboard(e, onOpen)}
+          className="flex-1 cursor-pointer text-left"
+        >
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <Badge variant="event">Événement</Badge>
+            <time dateTime={event.date} className="text-sm text-muted">
               {formatDate(event.date)}
             </time>
           </div>
-          <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2">
+          <h3 className="text-xl font-bold text-primary mb-2 line-clamp-2">
             {emoji} {event.title}
           </h3>
-          <p className="text-text-light text-sm line-clamp-3 flex-1">{event.description}</p>
+          <p className="text-muted line-clamp-3">{event.description}</p>
           {event.price && (
-            <p className="mt-2 text-sm font-medium text-primary">{event.price}</p>
+            <p className="mt-2 text-sm font-semibold text-secondary">{event.price}</p>
           )}
-          <span className="mt-4 text-primary font-semibold text-sm">En savoir plus →</span>
-        </CardContent>
-      </Link>
+        </div>
+        <div className="flex justify-end mt-3 shrink-0">
+          <Button href={href} variant="ghost" size="sm" className="text-accent font-bold">
+            En savoir plus →
+          </Button>
+        </div>
+      </CardContent>
     </Card>
   )
 }

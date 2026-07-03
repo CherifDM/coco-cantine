@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { ComponentPropsWithoutRef } from 'react'
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
+type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'gold' | 'outline' | 'ghost'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
 interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
@@ -12,10 +12,13 @@ interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-white hover:bg-primary/90 focus-visible:ring-primary',
-  secondary: 'bg-secondary text-white hover:bg-secondary/90 focus-visible:ring-secondary',
-  outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white focus-visible:ring-primary',
-  ghost: 'text-primary hover:bg-primary/10 focus-visible:ring-primary',
+  primary: 'bg-primary text-white hover:bg-primary/85 shadow-sm hover:shadow-md',
+  secondary: 'bg-secondary text-white hover:bg-secondary/85 shadow-sm hover:shadow-md',
+  accent: 'bg-accent text-white hover:bg-accent/85 shadow-sm hover:shadow-md',
+  gold: 'bg-gold text-dark hover:bg-gold/90 shadow-sm hover:shadow-md font-bold',
+  outline:
+    'border-2 border-primary text-primary hover:bg-primary hover:text-white bg-transparent',
+  ghost: 'text-primary hover:bg-light',
 }
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -24,7 +27,6 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: 'px-8 py-4 text-lg',
 }
 
-/** Bouton réutilisable avec variantes et support lien */
 export function Button({
   variant = 'primary',
   size = 'md',
@@ -34,7 +36,7 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const classes = `inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${variantClasses[variant]} ${sizeClasses[size]} ${className}`
+  const classes = `inline-flex items-center justify-center gap-2 rounded-full font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${variantClasses[variant]} ${sizeClasses[size]} ${className}`
 
   if (href) {
     if (external) {

@@ -7,27 +7,26 @@ interface VolunteerRoleCardProps {
   role: VolunteerRole
 }
 
-/** Carte décrivant un rôle bénévole */
 export function VolunteerRoleCard({ role }: VolunteerRoleCardProps) {
   const anchorId = role.slug?.current || role._id
 
   return (
-    <Card as="article" id={anchorId} className="scroll-mt-24">
+    <Card as="article" id={anchorId} hover className="scroll-mt-24">
       <CardContent>
-        <div className="flex items-start gap-3 mb-4">
+        <div className="flex items-start gap-4 mb-4">
           {role.icon && (
-            <span className="text-3xl" aria-hidden="true">{role.icon}</span>
+            <span className="text-4xl shrink-0" aria-hidden="true">{role.icon}</span>
           )}
           <div>
             <h3 className="text-xl font-bold text-primary">{role.title}</h3>
             {role.schedule && (
-              <p className="text-sm text-text-light mt-1">{role.schedule}</p>
+              <p className="text-sm text-muted mt-1">{role.schedule}</p>
             )}
           </div>
         </div>
 
         {role.description && (
-          <p className="text-text-light mb-4">{role.description}</p>
+          <p className="text-muted mb-4 leading-relaxed">{role.description}</p>
         )}
 
         {role.content && role.content.length > 0 && (
@@ -35,13 +34,13 @@ export function VolunteerRoleCard({ role }: VolunteerRoleCardProps) {
         )}
 
         {role.requirements && role.requirements.length > 0 && (
-          <div className="mt-4">
-            <h4 className="font-semibold text-sm mb-2">Prérequis :</h4>
+          <div className="mt-5">
+            <h4 className="font-bold text-sm mb-2 text-secondary">Prérequis :</h4>
             <ul className="flex flex-wrap gap-2">
               {role.requirements.map((req, i) => (
                 <li
                   key={i}
-                  className="rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                  className="rounded-full bg-highlight/40 px-3 py-1 text-sm text-dark font-medium"
                 >
                   {req}
                 </li>
@@ -58,14 +57,13 @@ interface TestimonialCardProps {
   testimonial: VolunteerTestimonial
 }
 
-/** Carte témoignage bénévole */
 export function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
-    <Card as="blockquote" className="h-full">
+    <Card as="blockquote" hover variant="light" className="h-full">
       <CardContent className="flex flex-col h-full">
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex items-center gap-4 mb-5">
           {testimonial.photo?.asset ? (
-            <div className="relative h-14 w-14 rounded-full overflow-hidden shrink-0">
+            <div className="relative h-14 w-14 rounded-full overflow-hidden shrink-0 ring-2 ring-accent/30">
               <SanityImageComponent
                 image={testimonial.photo}
                 alt={testimonial.photo.alt || `Photo de ${testimonial.name}`}
@@ -82,13 +80,13 @@ export function TestimonialCard({ testimonial }: TestimonialCardProps) {
             </div>
           )}
           <div>
-            <cite className="font-bold not-italic">{testimonial.name}</cite>
+            <cite className="font-bold not-italic text-primary">{testimonial.name}</cite>
             {testimonial.role && (
-              <p className="text-sm text-text-light">{testimonial.role}</p>
+              <p className="text-sm text-muted">{testimonial.role}</p>
             )}
           </div>
         </div>
-        <p className="text-foreground italic flex-1">&ldquo;{testimonial.testimonial}&rdquo;</p>
+        <p className="text-dark italic flex-1 leading-relaxed">&ldquo;{testimonial.testimonial}&rdquo;</p>
       </CardContent>
     </Card>
   )

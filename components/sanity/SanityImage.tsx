@@ -11,9 +11,9 @@ interface SanityImageProps {
   className?: string
   sizes?: string
   priority?: boolean
+  objectFit?: 'cover' | 'contain'
 }
 
-/** Image Sanity optimisée via next/image */
 export function SanityImageComponent({
   image,
   alt,
@@ -23,43 +23,101 @@ export function SanityImageComponent({
   className = '',
   sizes = '(max-width: 768px) 100vw, 50vw',
   priority = false,
+  objectFit = 'cover',
 }: SanityImageProps) {
-  if (!image?.asset) {
+  const fitClass = objectFit === 'contain' ? 'object-contain' : 'object-cover'
+
+  if (!image) {
     return (
       <div
         className={`bg-primary/10 flex items-center justify-center ${className}`}
         role="img"
         aria-label={alt}
       >
-        <span className="text-text-light text-sm">Image non disponible</span>
+        <span className="text-muted text-sm">Image non disponible</span>
       </div>
     )
   }
 
-  const src = urlFor(image).width(width).height(height).auto('format').url()
+  if (image.asset?.url) {
+    const src = image.asset.url
 
-  if (fill) {
+    if (fill) {
+      return (
+        <Image
+          src={src}
+          alt={alt || 'Image'}
+          fill
+          className={`${fitClass} ${className}`}
+          sizes={sizes}
+          priority={priority}
+          unoptimized
+        />
+      )
+    }
+
     return (
       <Image
         src={src}
-        alt={alt}
-        fill
-        className={`object-cover ${className}`}
+        alt={alt || 'Image'}
+        width={width}
+        height={height}
+        className={className}
         sizes={sizes}
         priority={priority}
+        unoptimized
       />
     )
   }
 
+  if (image.asset?._ref || image.asset?._id) {
+    try {
+      const src = urlFor(image).width(width).height(height).auto('format').url()
+
+      if (fill) {
+        return (
+          <Image
+            src={src}
+            alt={alt || 'Image'}
+            fill
+            className={`${fitClass} ${className}`}
+            sizes={sizes}
+            priority={priority}
+          />
+        )
+      }
+
+      return (
+        <Image
+          src={src}
+          alt={alt || 'Image'}
+          width={width}
+          height={height}
+          className={className}
+          sizes={sizes}
+          priority={priority}
+        />
+      )
+    } catch {
+      return (
+        <div
+          className={`bg-primary/10 flex items-center justify-center ${className}`}
+          role="img"
+          aria-label={alt}
+        >
+          <span className="text-muted text-sm">Erreur de chargement</span>
+        </div>
+      )
+    }
+  }
+
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      className={className}
-      sizes={sizes}
-      priority={priority}
-    />
+    <div
+      className={`bg-primary/10 flex items-center justify-center ${className}`}
+      role="img"
+      aria-label={alt}
+    >
+      <span className="text-muted text-sm">Format d&apos;image non supporté</span>
+    </div>
   )
 }

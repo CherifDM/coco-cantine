@@ -7,12 +7,11 @@ interface GalleryPreviewProps {
   images?: GalleryImage[]
 }
 
-/** Aperçu galerie photos sur la page d'accueil */
 export function GalleryPreview({ images }: GalleryPreviewProps) {
   if (!images || images.length === 0) return null
 
   return (
-    <Section ariaLabelledby="gallery-title">
+    <Section className="bg-light" ariaLabelledby="gallery-title">
       <Container>
         <SectionHeader
           id="gallery-title"
@@ -23,17 +22,17 @@ export function GalleryPreview({ images }: GalleryPreviewProps) {
           {images.map((item) => (
             <figure
               key={item._id}
-              className="relative aspect-square rounded-xl overflow-hidden shadow-md"
+              className="relative aspect-square rounded-2xl overflow-hidden shadow-md group"
             >
               <SanityImageComponent
                 image={item.image}
                 alt={item.alt}
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover hover:scale-105 transition-transform duration-300"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
               {item.caption && (
-                <figcaption className="absolute bottom-0 left-0 right-0 bg-foreground/60 text-white text-xs p-2">
+                <figcaption className="absolute bottom-0 left-0 right-0 bg-dark/70 text-white text-xs p-3">
                   {item.caption}
                 </figcaption>
               )}
